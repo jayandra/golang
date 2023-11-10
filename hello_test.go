@@ -22,8 +22,12 @@ func TestHello(t *testing.T) {
 	})
 }
 
-// ASK: What does the string here indicate? If it was return type shouldn't having it outside bracket work?
-// What does the t *testing.TB and the one without * indicate?
+func TestIterateHello(t *testing.T) {
+	got := iterateHello(2, "jayandra", "Spanish")
+	want := "Hola jayandra\nHola jayandra\n"
+	assertCorrectMessage(t, got, want)
+}
+
 func assertCorrectMessage(t testing.TB, got, want string) {
 	t.Helper()
 	if got != want {
