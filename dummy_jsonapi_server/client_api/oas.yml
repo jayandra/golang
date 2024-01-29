@@ -1,0 +1,210 @@
+# quicktype to convert json response to json-schema
+# https://transform.tools/json-schema-to-openapi-schema to convert json-schema to OAS
+# https://editor.swagger.io/ to add headers and verify the OAS
+
+---
+openapi: 3.0.3
+info:
+  version: 3.0.0-beta.1
+  title: Swagger Petstore - OpenAPI 3.0
+  description: Test Blog with post and comments
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:9999/
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: DailyPay user access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+components:
+  schemas:
+    Blog:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: "#/components/schemas/Data"
+        included:
+          type: array
+          items:
+            $ref: "#/components/schemas/Included"
+      required:
+        - data
+        - included
+      title: Blog
+    Data:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+          format: integer
+        attributes:
+          $ref: "#/components/schemas/DataAttributes"
+        relationships:
+          $ref: "#/components/schemas/DataRelationships"
+        links:
+          $ref: "#/components/schemas/DataLinks"
+        meta:
+          $ref: "#/components/schemas/Meta"
+      required:
+        - attributes
+        - id
+        - links
+        - meta
+        - relationships
+        - type
+      title: Data
+    DataAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        created_at:
+          type: integer
+        current_post_id:
+          type: integer
+        title:
+          type: string
+        view_count:
+          type: integer
+      required:
+        - created_at
+        - current_post_id
+        - title
+        - view_count
+      title: DataAttributes
+    DataLinks:
+      type: object
+      additionalProperties: false
+      properties:
+        self:
+          type: string
+          format: uri
+      required:
+        - self
+      title: DataLinks
+    Meta:
+      type: object
+      additionalProperties: false
+      properties:
+        detail:
+          type: string
+      required:
+        - detail
+      title: Meta
+    DataRelationships:
+      type: object
+      additionalProperties: false
+      properties:
+        current_post:
+          $ref: "#/components/schemas/CurrentPost"
+        posts:
+          $ref: "#/components/schemas/Posts"
+      required:
+        - current_post
+        - posts
+      title: DataRelationships
+    CurrentPost:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          anyOf:
+            - type: array
+              items:
+                $ref: "#/components/schemas/Datum"
+              nullable: true
+      required:
+        - data
+      title: CurrentPost
+    Datum:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+          format: integer
+      required:
+        - id
+        - type
+      title: Datum
+    Posts:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Datum"
+        links:
+          $ref: "#/components/schemas/PostsLinks"
+        meta:
+          $ref: "#/components/schemas/Meta"
+      required:
+        - data
+        - links
+        - meta
+      title: Posts
+    PostsLinks:
+      type: object
+      additionalProperties: false
+      properties:
+        related:
+          type: string
+          format: uri
+      required:
+        - related
+      title: PostsLinks
+    Included:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+          format: integer
+        attributes:
+          $ref: "#/components/schemas/IncludedAttributes"
+        relationships:
+          $ref: "#/components/schemas/IncludedRelationships"
+      required:
+        - attributes
+        - id
+        - type
+      title: Included
+    IncludedAttributes:
+      type: object
+      additionalProperties: false
+      properties:
+        body:
+          type: string
+        post_id:
+          type: integer
+        blog_id:
+          type: integer
+        title:
+          type: string
+      required:
+        - body
+      title: IncludedAttributes
+    IncludedRelationships:
+      type: object
+      additionalProperties: false
+      properties:
+        comments:
+          $ref: "#/components/schemas/CurrentPost"
+      required:
+        - comments
+      title: IncludedRelationships
